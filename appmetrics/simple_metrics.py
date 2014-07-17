@@ -19,7 +19,7 @@ Implementation of simple metrics
 """
 
 import threading
-
+import time
 
 class Counter(object):
     """
@@ -79,6 +79,41 @@ class Gauge(object):
         """
 
         return dict(kind="gauge", value=self.value)
+
+    def raw_data(self):
+        return self.value
+
+class Timer(object):
+    """
+    A simple timer, with function timing support
+    """
+
+    def __init__(self):
+        self.value = 0
+        self.lock = threading.Lock()
+
+    def start(self):
+        self.startTime = time.time();
+        
+    def stop(self):
+        self.endTime = time.time()
+        self.value = (self.endTime - self.startTime)
+    
+    def time(self, function, *args):
+        """
+        Times a function. Format should be timer.time(function, arguments))
+        """
+        self.startTime = time.time()
+        x = function(*args)
+        self.value = (time.time() - self.startTime)
+        return x
+
+    def get(self):
+        """
+        Return the timer's current value
+        """
+
+        return dict(kind="timer", value=self.value)
 
     def raw_data(self):
         return self.value

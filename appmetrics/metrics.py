@@ -137,6 +137,12 @@ def new_meter(name, tick_interval=5):
 
     return new_metric(name, meter.Meter, tick_interval)
 
+def new_timer(name):
+    """
+    Build a new "timer" metric
+    """
+
+    return new_metric(name, simple_metrics.Timer)
 
 def new_histogram_with_implicit_reservoir(name, reservoir_type='uniform', *reservoir_args, **reservoir_kwargs):
     """
